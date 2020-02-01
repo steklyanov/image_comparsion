@@ -9,9 +9,8 @@ class PersonSerializer(serializers.ModelSerializer):
         fields = ['name', 'surname', 'vector']
 
 
-class PersonRegistrationSerializer(serializers.ModelSerializer):
-    """ Serializer for user registration endpoint (without vector)"""
-
+class ListIdSerializer(serializers.ModelSerializer):
+    """ Serializer for displaying only User ID's"""
     class Meta:
         model = Person
-        fields = ['name', 'surname']
+        fields = ['id']
