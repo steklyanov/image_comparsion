@@ -1,4 +1,4 @@
-from .models import Person
+from .models import Person, Image
 from rest_framework import serializers
 
 
@@ -14,3 +14,10 @@ class ListIdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = ['id']
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    """ Serializer for image uploading"""
+    class Meta:
+        model = Image
+        fields = ['image']

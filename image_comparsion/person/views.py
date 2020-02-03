@@ -4,9 +4,12 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser
 
-from .serializers import PersonSerializer, ListIdSerializer
+from .serializers import PersonSerializer, ListIdSerializer, ImageSerializer
 from .models import Person
+
+from PIL import Image
 
 
 class PersonRegistration(APIView):
@@ -39,3 +42,23 @@ class ListUserById(APIView):
         person = self.get_object(id)
         serializer = PersonSerializer(person)
         return Response(serializer.data)
+
+
+# class ImageUploadParser(FileUploadParser):
+#     media_type = 'multipart/form-data'
+
+
+class ImageUploadView(APIView):
+    """ View for uploading image"""
+    parser_class = (MultiPartParser,)
+
+    def put(self, request, *args, **kwargs):
+
+        file_serializer = ImageSerializer(data=request.data)
+
+        if file_serializer.is_valid():
+            print(file_serializer, "as it is")
+            print(type(file_serializer), "his type")
+            return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
