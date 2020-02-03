@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <person-create/>
     <person-list/>
     <img src="./assets/logo.png">
     <router-view/>
@@ -8,9 +9,10 @@
 
 <script>
 import PersonList from "./components/PersonList";
+import PersonCreate from "./components/PersonCreate";
 export default {
   name: 'App',
-  components: {PersonList}
+  components: {PersonCreate, PersonList}
 }
 </script>
 

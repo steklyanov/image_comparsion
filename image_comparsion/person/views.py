@@ -17,6 +17,7 @@ class PersonRegistration(APIView):
 
     @staticmethod
     def post(request):
+        print(request.data['name'])
         person_instance = PersonSerializer(data=request.data)
         if person_instance.is_valid():
             person = Person(name=request.data['name'], surname=request.data['surname'])
@@ -57,8 +58,8 @@ class ImageUploadView(APIView):
         file_serializer = ImageSerializer(data=request.data)
 
         if file_serializer.is_valid():
-            print(file_serializer, "as it is")
-            print(type(file_serializer), "his type")
+            image = Image.open(request.data['image'])
+            print(image)
             return Response(file_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
