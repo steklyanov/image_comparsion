@@ -21,3 +21,5 @@
 Также прошу подтвердить получение этого сообщения.
 Удачи!
 --
+
+https://stackoverflow.com/questions/8915296/python-image-library-fails-with-message-decoder-jpeg-not-available-pil

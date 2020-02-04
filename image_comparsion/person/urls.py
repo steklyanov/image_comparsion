@@ -7,5 +7,5 @@ urlpatterns = [
     path('create/', PersonRegistration.as_view(), name='create'),
     path('list/', ListAllUsersView.as_view(), name='list'),
     path('details/<id>/', ListUserById.as_view(), name='details'),
-    path('upload/', ImageUploadView.as_view(), name='upload'),
+    path('details/<id>/upload/', ImageUploadView.as_view(), name='upload'),
 ]
