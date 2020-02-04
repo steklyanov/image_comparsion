@@ -15,6 +15,14 @@ import cv2
 from .tasks import save_vector_to_database, euclidean_distance
 
 
+# NOT SURE ITS A GOOD PRACTISE, BUT I USE THIS FUNCTION IN MULTIPLE VIEWS
+def get_object(uid):
+    try:
+        return Person.objects.get(id=uid)
+    except:
+        raise Http404
+
+
 class PersonRegistration(APIView):
     """ View to create a new user object"""
 
@@ -36,17 +44,20 @@ class ListAllUsersView(generics.ListAPIView):
 
 class ListUserById(APIView):
     """ Show user by id in url path"""
-    @staticmethod
-    def get_object(id):
-        try:
-            return Person.objects.get(id=id)
-        except:
-            raise Http404
 
     def get(self, request, id, format=None):
-        person = self.get_object(id)
+        person = get_object(id)
         serializer = PersonSerializer(person)
         return Response(serializer.data)
+
+
+class DeleteUserById(APIView):
+    """ View for deleting person"""
+
+    def delete(self, request, id):
+        person = get_object(id)
+        person.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ImageUploadView(APIView):
@@ -68,26 +79,15 @@ class ImageUploadView(APIView):
 
 class EuclideanDistanceView(APIView):
     """ View to calculate Euclidean distance between arrays"""
-    @staticmethod
-    def get_object(id):
-        try:
-            return Person.objects.get(id=id)
-        except:
-            raise Http404
 
     def get(self, request, id1, id2):
         print(id1)
         print(id2)
-        person_1 = self.get_object(id1)
-        person_2 = self.get_object(id2)
+        person_1 = get_object(id1)
+        person_2 = get_object(id2)
         if person_1.vector and person_2.vector:
             a = np.array(person_1.vector)
             b = np.array(person_2.vector)
             dist = np.linalg.norm(a-b)
-            # data = euclidean_distance.delay(person_1.vector, person_2.vector)
-            print("here we are")
             return Response(dist, status=status.HTTP_201_CREATED)
         return Response({'qq': 'qqq'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-# a1cea539-828d-49d5-b291-5d9bc9bb89cd/9968b608-c884-4b31-8a4f-31b5d3166d5d/
