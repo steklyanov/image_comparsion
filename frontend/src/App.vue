@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import PersonList from "./components/PersonList";
-import PersonCreate from "./components/PersonCreate";
+import PersonList from './components/PersonList'
+import PersonCreate from './components/PersonCreate'
 export default {
   name: 'App',
   components: {PersonCreate, PersonList}

@@ -29,37 +29,30 @@
 </template>
 
 <script>
-    import axios from 'axios';
-    export default {
-        name: "PersonCreate",
-      data() {
-        return {
-          form: {
-            surname: '',
-            name: '',
-          },
-          errors: []
-        }
+// import {HTTP} from '../http-common'
+export default {
+  name: 'PersonCreate',
+  data () {
+    return {
+      form: {
+        surname: '',
+        name: ''
       },
-      methods: {
-        onSubmit(evt) {
-          axios.post('http://127.0.0.1:8000/api/v1/person/create/', {
-            name: this.form.name,
-            surname: this.form.surname
-          })
-          .then(response => {})
-          .catch(e => {
-            this.errors.push(e)
-          })
-        },
-        onReset(evt) {
-          evt.preventDefault()
-          // Reset our form values
-          this.form.surname = ''
-          this.form.name = ''
-        }
-      }
+      errors: []
     }
+  },
+  methods: {
+    onSubmit (evt) {
+      this.$store.dispatch('CREATE_PERSON', {name: this.form.name, surname: this.form.surname})
+    },
+    onReset (evt) {
+      evt.preventDefault()
+      // Reset our form values
+      this.form.surname = ''
+      this.form.name = ''
+    }
+  }
+}
 </script>
 
 <style scoped>
