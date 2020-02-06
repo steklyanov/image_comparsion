@@ -7,12 +7,19 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
-    persons: null
+    persons: null,
+    current_person: {
+      name: null,
+      surname: null
+    }
   },
 
   getters: {
     PERSONS: state => {
       return state.persons
+    },
+    CURRENT_PERSON: state => {
+      return state.current_person
     }
   },
 
@@ -22,8 +29,13 @@ export const store = new Vuex.Store({
     },
 
     ADD_PERSON: (state, payload) => {
-      console.log(payload)
       state.persons.push({id: payload})
+    },
+
+    CHANGE_PERSON: (state, payload) => {
+      console.log(payload)
+      state.current_person.name = payload.name
+      state.current_person.surname = payload.surname
     }
   },
 
@@ -49,6 +61,15 @@ export const store = new Vuex.Store({
         .catch(e => {
           console.log(e)
           // this.errors.push(e)
+        })
+    },
+    GET_PERSON_DATA: async (context, payload) => {
+      HTTP.get('details/' + payload.id)
+        .then(response => {
+          context.commit('CHANGE_PERSON', response.data)
+        })
+        .catch(e => {
+          console.log(e)
         })
     }
   }

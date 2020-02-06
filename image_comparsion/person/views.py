@@ -46,6 +46,7 @@ class ListUserById(APIView):
     """ Show user by id in url path"""
 
     def get(self, request, id, format=None):
+        print(id)
         person = get_object(id)
         serializer = PersonSerializer(person)
         return Response(serializer.data)
