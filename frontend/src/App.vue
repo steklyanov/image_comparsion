@@ -2,14 +2,14 @@
   <div id="app">
     <person-create/>
     <person-list/>
-    <img src="./assets/logo.png">
-    <router-view/>
+<!--    <router-view/>-->
   </div>
 </template>
 
 <script>
 import PersonList from './components/PersonList'
 import PersonCreate from './components/PersonCreate'
+
 export default {
   name: 'App',
   components: {PersonCreate, PersonList}

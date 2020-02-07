@@ -5,22 +5,30 @@
     <b-modal :id="'myModal' + id" title="BootstrapVue">
       <p class="my-4">Name: {{this.$store.getters.CURRENT_PERSON.name}}</p>
       <p class="my-4">Surname: {{this.$store.getters.CURRENT_PERSON.surname}}</p>
+      <p class="my-4">Vector: {{ getVectorStatus() }}</p>
+      <upload-image :id="id" :uuid="uuid" />
     </b-modal>
   </div>
 </template>
 
 <script>
+import UploadImage from './UploadImage'
 export default {
   name: 'PersonDetails',
+  components: {UploadImage},
   props: ['uuid', 'id'],
-  // created () {
-  //   this.$store.dispatch('GET_PERSON_DATA')
-  // },
   methods: {
     getPerson: function () {
       this.$store.dispatch('GET_PERSON_DATA', {
         id: this.uuid
       })
+    },
+    getVectorStatus: function () {
+      if (this.$store.getters.CURRENT_PERSON.vector) {
+        return ('Yes')
+      } else {
+        return ('No')
+      }
     }
   }
 }

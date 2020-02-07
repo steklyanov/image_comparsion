@@ -4,12 +4,11 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
 
 from .serializers import PersonSerializer, ListIdSerializer, ImageSerializer
 from .models import Person
 
-from PIL import Image
 import numpy as np
 import cv2
 from .tasks import save_vector_to_database, euclidean_distance
@@ -63,11 +62,13 @@ class DeleteUserById(APIView):
 
 class ImageUploadView(APIView):
     """ View for uploading image"""
-    parser_class = (MultiPartParser,)
+    parser_classes = (MultiPartParser, FileUploadParser, FormParser)
 
-    def put(self, request, id):
+    def post(self, request, id, *args, **kwargs):
+        print("ssssss", request.data)
         file_serializer = ImageSerializer(data=request.data)
         if file_serializer.is_valid():
+            print("sfdffdfdf")
             x = np.fromstring(request.data['image'].read(), dtype='uint8')
             img = cv2.imdecode(x, cv2.IMREAD_UNCHANGED).astype(np.float32) / 255
             flat_arr = img.ravel()

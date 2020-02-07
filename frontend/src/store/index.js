@@ -24,7 +24,7 @@ export const store = new Vuex.Store({
   },
 
   mutations: {
-    SET_PERSON: (state, payload) => {
+    SET_PERSONS: (state, payload) => {
       state.persons = payload
     },
 
@@ -32,10 +32,14 @@ export const store = new Vuex.Store({
       state.persons.push({id: payload})
     },
 
-    CHANGE_PERSON: (state, payload) => {
+    LIST_PERSON: (state, payload) => {
       console.log(payload)
       state.current_person.name = payload.name
       state.current_person.surname = payload.surname
+    },
+
+    DELETE_PERSON: (state, payload) => {
+      state.persons.splice(payload.arr_id, 1)
     }
   },
 
@@ -43,7 +47,7 @@ export const store = new Vuex.Store({
     GET_PERSONS: async (context, payload) => {
       HTTP.get('list/')
         .then(response => {
-          context.commit('SET_PERSON', response.data)
+          context.commit('SET_PERSONS', response.data)
         })
         .catch(e => {
           this.errors.push(e)
@@ -60,15 +64,35 @@ export const store = new Vuex.Store({
         })
         .catch(e => {
           console.log(e)
-          // this.errors.push(e)
         })
     },
     GET_PERSON_DATA: async (context, payload) => {
       HTTP.get('details/' + payload.id)
         .then(response => {
-          context.commit('CHANGE_PERSON', response.data)
+          context.commit('LIST_PERSON', response.data)
         })
         .catch(e => {
+          console.log(e)
+        })
+    },
+    DELETE_PERSON: async (context, payload) => {
+      HTTP.delete('details/' + payload.id + '/delete/')
+        .then(response => {
+          context.dispatch('GET_PERSONS')
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
+    UPLOAD_IMAGE: async (context, payload) => {
+      HTTP.put('details/' + payload.id + '/upload/',
+        {image: payload.image})
+        .then(response => {
+          console.log(payload)
+          console.log(response)
+        })
+        .catch(e => {
+          console.log(payload)
           console.log(e)
         })
     }
