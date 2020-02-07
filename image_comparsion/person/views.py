@@ -5,12 +5,15 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
+from rest_framework.renderers import JSONRenderer
+
 
 from .serializers import PersonSerializer, ListIdSerializer, ImageSerializer
 from .models import Person
 
 import numpy as np
-import cv2
+# import cv2
+from cv2 import imdecode, IMREAD_UNCHANGED, resize
 from .tasks import save_vector_to_database, euclidean_distance
 
 
@@ -32,7 +35,7 @@ class PersonRegistration(APIView):
         if person_instance.is_valid():
             person = Person(name=request.data['name'], surname=request.data['surname'])
             person.save()
-            return Response(person.id, status=status.HTTP_201_CREATED)
+            return Response({id: person.id}, status=status.HTTP_201_CREATED)
         return Response(person_instance.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -44,11 +47,18 @@ class ListAllUsersView(generics.ListAPIView):
 class ListUserById(APIView):
     """ Show user by id in url path"""
 
+    renderer_classes = [JSONRenderer]
+
     def get(self, request, id, format=None):
         print(id)
         person = get_object(id)
         serializer = PersonSerializer(person)
-        return Response(serializer.data)
+        user = {
+            'name': person.name,
+            'surname': person.surname,
+            'vector': True if person.vector else False
+        }
+        return Response(user)
 
 
 class DeleteUserById(APIView):
@@ -64,11 +74,17 @@ class ImageUploadView(APIView):
     """ View for uploading image"""
     parser_classes = (MultiPartParser, FileUploadParser, FormParser)
 
-    def post(self, request, id, *args, **kwargs):
+    def put(self, request, id, *args, **kwargs):
         file_serializer = ImageSerializer(data=request.data)
         if file_serializer.is_valid():
             x = np.fromstring(request.data['image'].read(), dtype='uint8')
-            img = cv2.imdecode(x, cv2.IMREAD_UNCHANGED).astype(np.float32) / 255
+            # img = imdecode(x, IMREAD_UNCHANGED).astype(np.float32) / 255
+            print(type(x))
+            get_object(id)
+            img = imdecode(x, IMREAD_UNCHANGED)
+            img = resize(img, (300, 300))
+            img = img.astype(np.float32) / 255
+            print(type(img))
             flat_arr = img.ravel()
             vector = flat_arr.tolist()
             save_vector_to_database.delay(id, vector)
@@ -89,5 +105,5 @@ class EuclideanDistanceView(APIView):
             a = np.array(person_1.vector)
             b = np.array(person_2.vector)
             dist = np.linalg.norm(a-b)
-            return Response(dist, status=status.HTTP_201_CREATED)
-        return Response({'qq': 'qqq'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'distance': dist}, status=status.HTTP_201_CREATED)
+        return Response({'error': 'persons vectors didn\'t provide'}, status=status.HTTP_400_BAD_REQUEST)
