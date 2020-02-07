@@ -65,10 +65,8 @@ class ImageUploadView(APIView):
     parser_classes = (MultiPartParser, FileUploadParser, FormParser)
 
     def post(self, request, id, *args, **kwargs):
-        print("ssssss", request.data)
         file_serializer = ImageSerializer(data=request.data)
         if file_serializer.is_valid():
-            print("sfdffdfdf")
             x = np.fromstring(request.data['image'].read(), dtype='uint8')
             img = cv2.imdecode(x, cv2.IMREAD_UNCHANGED).astype(np.float32) / 255
             flat_arr = img.ravel()
