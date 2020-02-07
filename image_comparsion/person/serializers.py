@@ -20,4 +20,4 @@ class ImageSerializer(serializers.ModelSerializer):
     """ Serializer for image uploading"""
     class Meta:
         model = Image
-        fields = ['image']
+        fields = ['file']

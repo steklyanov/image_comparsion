@@ -85,8 +85,11 @@ export const store = new Vuex.Store({
         })
     },
     UPLOAD_IMAGE: async (context, payload) => {
+      console.log(payload)
       HTTP.put('details/' + payload.id + '/upload/',
-        {image: payload.image})
+        payload.image, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
         .then(response => {
           console.log(payload)
           console.log(response)

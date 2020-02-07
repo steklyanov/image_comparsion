@@ -73,12 +73,13 @@ class DeleteUserById(APIView):
 
 class ImageUploadView(APIView):
     """ View for uploading image"""
-    parser_classes = (MultiPartParser, FileUploadParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser)
 
     def put(self, request, id, *args, **kwargs):
+        print(request.data)
         file_serializer = ImageSerializer(data=request.data)
         if file_serializer.is_valid():
-            x = np.fromstring(request.data['image'].read(), dtype='uint8')
+            x = np.fromstring(request.data['file'].read(), dtype='uint8')
             # img = imdecode(x, IMREAD_UNCHANGED).astype(np.float32) / 255
             print(type(x))
             get_object(id)
@@ -93,7 +94,7 @@ class ImageUploadView(APIView):
             save_vector_to_database.delay(id, vector)
             return Response(file_serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(file_serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class EuclideanDistanceView(APIView):

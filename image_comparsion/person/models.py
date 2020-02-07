@@ -14,4 +14,4 @@ class Person(models.Model):
 
 
 class Image(models.Model):
-    image = models.ImageField()
+    file = models.ImageField()
