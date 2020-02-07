@@ -29,7 +29,7 @@ export const store = new Vuex.Store({
     },
 
     ADD_PERSON: (state, payload) => {
-      state.persons.push({id: payload})
+      state.persons.push({id: payload.id})
     },
 
     LIST_PERSON: (state, payload) => {

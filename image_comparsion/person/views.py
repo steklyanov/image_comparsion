@@ -12,7 +12,6 @@ from .serializers import PersonSerializer, ListIdSerializer, ImageSerializer
 from .models import Person
 
 import numpy as np
-# import cv2
 from cv2 import imdecode, IMREAD_UNCHANGED, resize
 from .tasks import save_vector_to_database, euclidean_distance
 
@@ -35,7 +34,7 @@ class PersonRegistration(APIView):
         if person_instance.is_valid():
             person = Person(name=request.data['name'], surname=request.data['surname'])
             person.save()
-            return Response({id: person.id}, status=status.HTTP_201_CREATED)
+            return Response({'id': person.id}, status=status.HTTP_201_CREATED)
         return Response(person_instance.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -64,10 +63,12 @@ class ListUserById(APIView):
 class DeleteUserById(APIView):
     """ View for deleting person"""
 
+    renderer_classes = [JSONRenderer]
+
     def delete(self, request, id):
         person = get_object(id)
         person.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'info': 'user deleted'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class ImageUploadView(APIView):
@@ -82,7 +83,9 @@ class ImageUploadView(APIView):
             print(type(x))
             get_object(id)
             img = imdecode(x, IMREAD_UNCHANGED)
+            print(img)
             img = resize(img, (300, 300))
+            print(img)
             img = img.astype(np.float32) / 255
             print(type(img))
             flat_arr = img.ravel()
@@ -97,8 +100,6 @@ class EuclideanDistanceView(APIView):
     """ View to calculate Euclidean distance between arrays"""
 
     def get(self, request, id1, id2):
-        print(id1)
-        print(id2)
         person_1 = get_object(id1)
         person_2 = get_object(id2)
         if person_1.vector and person_2.vector:

@@ -54,9 +54,9 @@ RUN ln -s \
 ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt /requirements.txt
-RUN apt-get install postgresql-client
-RUN apt-get --update --no-cache --virtual .tmp-build-deps \
-    gcc libc-dev linux-headers postgresql-dev
+#RUN apt-get install postgresql-client
+#RUN apt-get --update --no-cache --virtual .tmp-build-deps \
+#    gcc libc-dev linux-headers postgresql-dev
 
 RUN pip install -r /requirements.txt
 
@@ -64,5 +64,5 @@ RUN mkdir /image_comparsion
 WORKDIR /image_comparsion
 COPY ./image_comparsion /image_comparsion
 
-RUN adduser -D user
-USER user
+#RUN adduser -D user
+#USER user
