@@ -10,7 +10,8 @@ export const store = new Vuex.Store({
     persons: null,
     current_person: {
       name: null,
-      surname: null
+      surname: null,
+      distance: null
     }
   },
 
@@ -20,6 +21,9 @@ export const store = new Vuex.Store({
     },
     CURRENT_PERSON: state => {
       return state.current_person
+    },
+    DISTANCE: state => {
+      return state.distance
     }
   },
 
@@ -40,6 +44,10 @@ export const store = new Vuex.Store({
 
     DELETE_PERSON: (state, payload) => {
       state.persons.splice(payload.arr_id, 1)
+    },
+    SET_DISTANCE: (state, payload) => {
+      console.log(payload)
+      state.distance = payload
     }
   },
 
@@ -96,6 +104,15 @@ export const store = new Vuex.Store({
         })
         .catch(e => {
           console.log(payload)
+          console.log(e)
+        })
+    },
+    COMPARE_IMAGES: async (context, payload) => {
+      HTTP.get('distance/' + payload.id1 + '/' + payload.id2 + '/')
+        .then(response => {
+          context.commit('SET_DISTANCE', response.data.distance)
+        })
+        .catch(e => {
           console.log(e)
         })
     }

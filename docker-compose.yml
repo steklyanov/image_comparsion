@@ -43,13 +43,10 @@ services:
       - db
       - redis
       - app
-#  front:
-#      container_name: my-app
-#      build:
-#        context: ./frontend
-#        dockerfile: Dockerfile
-#      volumes:
-#        - '.:/app'
-#        - '/app/node_modules'
-#      ports:
-#        - '8081:8080'
+  front:
+    build: ./frontend
+    command: npm run dev
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "8080:8080"

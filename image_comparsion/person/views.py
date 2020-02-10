@@ -80,13 +80,10 @@ class ImageUploadView(APIView):
         file_serializer = ImageSerializer(data=request.data)
         if file_serializer.is_valid():
             x = np.fromstring(request.data['file'].read(), dtype='uint8')
-            # img = imdecode(x, IMREAD_UNCHANGED).astype(np.float32) / 255
             print(type(x))
             get_object(id)
+            resize(x, (300, 300))
             img = imdecode(x, IMREAD_UNCHANGED)
-            print(img)
-            img = resize(img, (300, 300))
-            print(img)
             img = img.astype(np.float32) / 255
             print(type(img))
             flat_arr = img.ravel()

@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'image_comparsion.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'HOST': os.environ.get('DB_HOST'),
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
@@ -128,10 +128,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-REDIS_URL = 'redis://redis_1:6379/0'
+REDIS_URL = 'redis://localhost:6379/0'
 # celery
-CELERY_BROKER_URL = 'redis://redis_1:6379/0'
-CELERY_RESULT_BACKEND = 'redis://redis_1:6379/0'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
